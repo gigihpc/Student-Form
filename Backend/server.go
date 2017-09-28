@@ -16,6 +16,15 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+type Login struct {
+	ID       bson.ObjectId `json:"id, omitempty"`
+	User     string        `json:"user"`
+	Password string        `json:"password"`
+}
+type LoginResource struct {
+	Data Login `json:"data"`
+}
+
 type User struct {
 	ID       bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
 	Name     string        `json:"name"`
@@ -80,6 +89,16 @@ func (r *UserRepo) Create(user *User) error {
 func (r *UserRepo) All() (UserCollection, error) {
 	res := UserCollection{[]User{}}
 	err := r.coll.Find(nil).All(&res.Data)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
+
+func (r *UserRepo) Matched(user string, password string) (UserResource, error) {
+	res := UserResource{}
+	err := r.coll.Find(bson.M{"email": user, "password": password}).One(&res.Data)
+
 	if err != nil {
 		return res, err
 	}
@@ -158,6 +177,20 @@ func (c *appContext) UserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	//w.Header().Set("Accept", "application/vnd.api+json")
 	json.NewEncoder(w).Encode(user)
+}
+func (c *appContext) MatchedHandler(w http.ResponseWriter, r *http.Request) {
+	body := context.Get(r, "body").(*LoginResource)
+	repo := UserRepo{c.db.C("user")}
+	_, err := repo.Matched(body.Data.User, body.Data.Password)
+	if err != nil {
+		println("Failed Login")
+		w.WriteHeader(401)
+		json.NewEncoder(w)
+	} else {
+		println("Success Login")
+		w.WriteHeader(200)
+		json.NewEncoder(w)
+	}
 }
 
 /*func checkBodyUser(body *UserResource) (*UserResource, error) {
@@ -436,6 +469,7 @@ func main() {
 	router.Post("/api/mhsws", commonHandler.Append(contentTypeHandler, bodyHandler(MahasiswaResource{})).ThenFunc(appC.createHandler))
 	router.Post("/api/user", commonHandler.Append(contentTypeHandler, bodyHandler(UserResource{})).ThenFunc(appC.createUserHandler))
 	router.Get("/api/user", commonHandler.ThenFunc(appC.UserHandler))
+	router.Post("/api/user_auth", commonHandler.Append(contentTypeHandler, bodyHandler(LoginResource{})).ThenFunc(appC.MatchedHandler))
 
 	port := "8001"
 	println("open port: " + port)

@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import axios from 'axios'
-import Hello from '@/components/Hello'
-import Form from '@/components/Form'
 import Mhsw from '@/components/mhsw'
 import Regist from '@/components/register'
 import Login from '@/components/Login'
@@ -11,16 +9,6 @@ Vue.use(Router)
 
 let router = new Router({
   routes: [
-    {
-      path: '/hello',
-      name: 'Hello',
-      component: Hello
-    },
-    {
-      path: '/form',
-      name: 'Form',
-      component: Form
-    },
     {
       path: '/mhsw',
       name: 'MHSW',

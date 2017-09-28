@@ -50,31 +50,53 @@ export default{
     }
   },
   methods: {
+    //  Login: function () {
+    //   let email = this.email
+    //   let pass = this.password
+    //   // if (typeof localStorage === "undefined" || localStorage === null) {
+    //   //   var LocalStorage = require('node-localstorage').LocalStorage;
+    //   //   localStorage = new LocalStorage('./scratch');
+    //   // }
+    // //   console.log('var: ', email, pass)
+    //   HTTP.get('/api/user').then(response => {
+    //     this.user_list = response.data.data
+    //     this.user_list.forEach(function (element) {
+    //       // console.log('from db: ', element.id, element.name, element.email, element.password, element.country)
+    //       if (email === element.email && pass === element.password) {
+    //         // console.log('Login Success!')
+    //         localStorage.setItem('auth', '1234')
+    //         this.$router.push('mhsw')
+    //         // this.$router.replace({path: '/'})
+    //       } else {
+    //         this.isfail = 'Login Failed !'
+    //         if (email === element.email && pass !== element.password) {
+    //           this.isfail = this.isfail + ' Password wrong'
+    //         } else if (email !== element.email && pass === element.password) {
+    //           this.isfail = this.isfail + ' Email didn`t create'
+    //         } else {
+    //           this.isfail = this.isfail + ' User didn`t create'
+    //         }
+    //         // console.log('Login Failed!!')
+    //       }
+    //     }, this)
+    //   })
+    //   .catch(err => {
+    //     console.log(err.response)
+    //   })
+    // }
     Login: function () {
-      let email = this.email
-      let pass = this.password
-    //   console.log('var: ', email, pass)
-      HTTP.get('/api/user').then(response => {
-        this.user_list = response.data.data
-        this.user_list.forEach(function (element) {
-          // console.log('from db: ', element.id, element.name, element.email, element.password, element.country)
-          if (email === element.email && pass === element.password) {
-            // console.log('Login Success!')
-            localStorage.setItem('auth', '1234')
-            this.$router.push('mhsw')
-            // this.$router.replace({path: '/'})
-          } else {
-            this.isfail = 'Login Failed !'
-            if (email === element.email && pass !== element.password) {
-              this.isfail = this.isfail + ' Password wrong'
-            } else if (email !== element.email && pass === element.password) {
-              this.isfail = this.isfail + ' Email didn`t create'
-            } else {
-              this.isfail = this.isfail + ' User didn`t create'
-            }
-            // console.log('Login Failed!!')
-          }
-        }, this)
+      let user = this.email
+      let password = this.password
+      let loginJson = {
+        data: {
+          user,
+          password
+        }
+      }
+      HTTP.post('/api/user_auth', loginJson).then(response => {
+        // console.log(response.data)
+        localStorage.setItem('auth', '1234')
+        this.$router.push('mhsw')
       })
       .catch(err => {
         console.log(err.response)
