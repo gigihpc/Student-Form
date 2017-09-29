@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"time"
 
+	"github.com/auth0/go-jwt-middleware"
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
@@ -24,6 +26,8 @@ type Login struct {
 type LoginResource struct {
 	Data Login `json:"data"`
 }
+
+var mySigningKey = []byte("Scret")
 
 type User struct {
 	ID       bson.ObjectId `json:"id,omitempty" bson:"_id,omitempty"`
@@ -190,9 +194,29 @@ func (c *appContext) MatchedHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		println("Success Login")
 		w.WriteHeader(200)
+		w.Write([]byte(createToken()))
 		json.NewEncoder(w)
 	}
 }
+
+func createToken() string {
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := token.Claims.(jwt.MapClaims)
+
+	claims["admin"] = true
+	claims["name"] = "Gigih"
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	tokenString, _ := token.SignedString(mySigningKey)
+
+	return tokenString
+}
+
+var jwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
+	ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
+		return mySigningKey, nil
+	},
+	SigningMethod: jwt.SigningMethodHS256,
+})
 
 /*func checkBodyUser(body *UserResource) (*UserResource, error) {
 	resbody := UserResource{}
@@ -467,12 +491,11 @@ func main() {
 	router.Get("/api/mhsws/:id", commonHandler.ThenFunc(appC.MahasiswaHandler))
 	router.Put("/api/mhsws/:id", commonHandler.Append(contentTypeHandler, bodyHandler(MahasiswaResource{})).ThenFunc(appC.updateHandler))
 	router.Delete("/api/mhsws/:id", commonHandler.ThenFunc(appC.deleteHandler))
-	router.Get("/api/mhsws", commonHandler.ThenFunc(appC.mhswHandler))
-	router.Post("/api/mhsws", commonHandler.Append(contentTypeHandler, bodyHandler(MahasiswaResource{})).ThenFunc(appC.createHandler))
+	router.Get("/api/mhsws", jwtMiddleware.Handler(commonHandler.ThenFunc(appC.mhswHandler)))
+	router.Post("/api/mhsws", jwtMiddleware.Handler(commonHandler.Append(contentTypeHandler, bodyHandler(MahasiswaResource{})).ThenFunc(appC.createHandler)))
 	router.Post("/api/user", commonHandler.Append(contentTypeHandler, bodyHandler(UserResource{})).ThenFunc(appC.createUserHandler))
 	router.Get("/api/user", commonHandler.ThenFunc(appC.UserHandler))
 	router.Post("/api/user_auth", commonHandler.Append(contentTypeHandler, bodyHandler(LoginResource{})).ThenFunc(appC.MatchedHandler))
-
 	port := "8001"
 	println("open port: " + port)
 	http.ListenAndServe(":"+port, router)

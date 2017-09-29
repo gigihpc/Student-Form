@@ -96,6 +96,8 @@ export default{
       HTTP.post('/api/user_auth', loginJson).then(response => {
         // console.log(response.data)
         localStorage.setItem('auth', '1234')
+        localStorage.setItem('token',''+response.data)
+        // console.log('token is: ',localStorage.getItem('token'))
         this.$router.push('mhsw')
       })
       .catch(err => {

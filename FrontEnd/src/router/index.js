@@ -19,7 +19,8 @@ let router = new Router({
       path: '/regist',
       name: 'Register',
       component: Regist,
-      meta: {disabledAction: true}
+      meta: {disabledAction: true},
+
     },
     {
       path: '/login',
@@ -58,5 +59,6 @@ export const HTTP = axios.create({
   baseURL: 'http://192.168.1.8:8001',
   timeout: 1000,
   withCredentials: true,
-  headers: {'Content-Type': 'application/json, text/plain, */*'}
+  headers: {'Content-Type': 'application/json, text/plain, */*',
+             'Authorization': 'Bearer '+localStorage.getItem('token') }
 })
