@@ -41,7 +41,7 @@ export default {
   },
   methods: {
     submit: function () {
-      console.log('submit')
+      // console.log('submit')
       this.err = ''
       let name = this.name
       let email = this.email

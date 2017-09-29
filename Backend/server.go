@@ -185,6 +185,7 @@ func (c *appContext) MatchedHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		println("Failed Login")
 		w.WriteHeader(401)
+		w.Write([]byte("Failed"))
 		json.NewEncoder(w)
 	} else {
 		println("Success Login")
@@ -241,6 +242,7 @@ func (c *appContext) MahasiswaHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	//w.Header().Set("Accept", "application/vnd.api+json")
+	// w.WriteHeader(201)
 	json.NewEncoder(w).Encode(mhsw)
 }
 func (c *appContext) createHandler(w http.ResponseWriter, r *http.Request) {
@@ -254,7 +256,7 @@ func (c *appContext) createHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 	//w.Header().Set("Accept", "application/vnd.api+json")
-	w.WriteHeader(201)
+	w.WriteHeader(201) // response fill new resource being create
 	json.NewEncoder(w).Encode(body)
 }
 func (c *appContext) updateHandler(w http.ResponseWriter, r *http.Request) {
@@ -278,8 +280,8 @@ func (c *appContext) deleteHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	//w.WriteHeader(204)
-	//w.Write([]byte("\n"))
+	w.WriteHeader(204) //response body update
+	w.Write([]byte("\n"))
 }
 
 // Errors

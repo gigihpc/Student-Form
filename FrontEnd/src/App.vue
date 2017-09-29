@@ -1,6 +1,6 @@
 <template>
   <v-app light>
-    <v-navigation-drawer persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer" enable-resize-watcher>
+    <v-navigation-drawer v-if="!$route.meta.disabledAction" persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer" enable-resize-watcher>
       <v-list>
         <v-list-tile value="true" v-for="(item, i) in items" :key="i">
           <v-list-tile-action>
