@@ -206,7 +206,12 @@ func createToken() string {
 	claims["admin"] = true
 	claims["name"] = "Gigih"
 	claims["exp"] = time.Now().Add(time.Hour * 24).Unix()
+	token.Claims = claims
 	tokenString, _ := token.SignedString(mySigningKey)
+
+	// if clm, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+	// 	println("test claim: ", clm["admin"], clm["name"])
+	// }
 
 	return tokenString
 }
