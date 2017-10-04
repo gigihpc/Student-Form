@@ -13,7 +13,6 @@ import (
 	"github.com/gorilla/context"
 	"github.com/julienschmidt/httprouter"
 	"github.com/justinas/alice"
-	"github.com/rs/cors"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -482,15 +481,15 @@ func main() {
 	//	panic(err)
 	//}
 	appC := appContext{session.DB("myproject")}
-	c := cors.New(cors.Options{
+	/*c := cors.New(cors.Options{
 		AllowedOrigins: []string{"http://192.168.1.8:8080"},
 		AllowedMethods: []string{"GET", "PUT", "POST", "DELETE"},
 		AllowedHeaders: []string{"content-type", "Accept", "X-XSRF-TOKEN", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
 		//ExposedHeaders:   []string{"*", "/"},
 		AllowCredentials: true,
-	})
+	})*/
 
-	commonHandler := alice.New( /*context.ClearHandler, loggingHandler, recoverHandler, acceptHandler,*/ c.Handler)
+	commonHandler := alice.New( /*context.ClearHandler, loggingHandler, recoverHandler, acceptHandler,c.Handler*/ )
 
 	router := NewRouter()
 	router.Get("/api/mhsws/:id", commonHandler.ThenFunc(appC.MahasiswaHandler))
