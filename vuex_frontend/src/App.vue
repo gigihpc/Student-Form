@@ -85,6 +85,8 @@ export default {
     logOut: function () {
       localStorage.removeItem('auth')
       localStorage.removeItem('token')
+      this.$store.commit('authguard', false)
+      this.$store.commit('authenticated','')
       this.$router.push('login')
     }
   }

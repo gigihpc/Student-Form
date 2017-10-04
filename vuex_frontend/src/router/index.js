@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store/index'
 import axios from 'axios'
 import Mhsw from '@/components/mhsw'
 import Regist from '@/components/register'
@@ -34,7 +35,7 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!localStorage.getItem('auth')) {
+    if (!store.state.auth) {
       next({
         path: '/login',
         query: { redirect: to.fullPath }
@@ -43,7 +44,7 @@ router.beforeEach((to, from, next) => {
       next()
     }
   } else {
-    if (localStorage.getItem('auth')) {
+    if (store.state.auth) {
       next({
         path: '/mhsw',
         query: {redirect: to.fullPath}
@@ -60,11 +61,11 @@ export const HTTP = axios.create({
   timeout: 1000,
   withCredentials: true,
   headers: {'Content-Type': 'application/json, text/plain, */*',
-             'Authorization': 'Bearer '+localStorage.getItem('token') }
+             'Authorization': 'Bearer '+store.state.token }
 })
-HTTP.interceptors.request.use(async(config) =>{
-     config.headers.Authorization ='Bearer '+localStorage.getItem('token')
-     return config
-   }, (error) => {
-       return Promise.reject(error)
-   })
+   HTTP.interceptors.request.use(async(config) =>{
+        config.headers.Authorization ='Bearer '+store.state.token
+        return config
+      }, (error) => {
+          return Promise.reject(error)
+      })

@@ -64,10 +64,8 @@ export default{
         user: this.email,
         password: this.password
       }}).then(() => {
-         console.log('token: ',this.$store.state.token)
-         console.log('auth: ', this.$store.state.auth)
-        // console.log('auth: ', auth(), ' token: ',token())
-          localStorage.setItem(''+this.$store.state.auth,'1234')
+          // console.log('auth: ',this.$store.state.auth)
+          localStorage.setItem('auth',this.$store.state.auth)
           localStorage.setItem('token',this.$store.state.token)
         this.$router.push('mhsw')
         // this.loading = false

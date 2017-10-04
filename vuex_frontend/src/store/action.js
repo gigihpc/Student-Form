@@ -6,13 +6,13 @@
          HTTP.post('/api/user_auth', credential).then(response => {
             commit('loading', true)
             commit('authenticated', response.data)
-            commit('authguard', 'auth')
+            commit('authguard', true)
    
             setTimeout(()=> {
                 commit('authenticated', response.data)
-                commit('authguard', 'auth')
+                commit('authguard', true)
                 commit('loading', false)
-                resolve()
+                resolve(response.data)
             }, 1000)
              
          })
