@@ -60,6 +60,11 @@ type MahasiswaResource struct {
 	Data Mahasiswa `json:"data"`
 }
 
+//Main handler
+type appContext struct {
+	db *sql.DB
+}
+
 //User
 func (c *appContext) Create(user *User) (int, error) {
 	if user.Name == "" || user.Email == "" || user.Password == "" || user.Country == "" {
@@ -183,11 +188,6 @@ func (c *appContext) Delete(id string) error {
 		return err
 	}
 	return nil
-}
-
-//Main handler
-type appContext struct {
-	db *sql.DB
 }
 
 //User
