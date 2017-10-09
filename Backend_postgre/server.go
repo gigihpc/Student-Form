@@ -59,8 +59,6 @@ type MahasiswaCollection struct {
 type MahasiswaResource struct {
 	Data Mahasiswa `json:"data"`
 }
-
-//Main handler
 type appContext struct {
 	db *sql.DB
 }
@@ -172,8 +170,9 @@ func (c *appContext) CreateMhsw(mhsw *Mahasiswa) (int, error) {
 	return id, nil
 }
 func (c *appContext) Update(mhsw Mahasiswa) error {
-	query := `update mhsw set name=$1, address=$2, old=$3 where id=$4`
-	_, err := c.db.Query(query, mhsw.Name, mhsw.Address, mhsw.Old, mhsw.Id)
+	// query := `update mhsw set name=$1, address=$2, old=$3 where id=$4`
+	query := `select * from update_mhsw($1::int, $2::text, $3::text, $4::text)`
+	_, err := c.db.Query(query, mhsw.Id, mhsw.Name, mhsw.Address, mhsw.Old)
 
 	if err != nil {
 		return err
