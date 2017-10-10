@@ -170,6 +170,7 @@ export default {
         this.pages_mhsw = this.mhsws.slice(0, this.pagination.rowsPerPage)
         this.isPagination = true
         this.isFilterPagination = false
+        this.page = 1
       })
         .catch(err => {
           console.log(err)
@@ -271,7 +272,7 @@ export default {
       HTTP.post('/api/search_mhsw',searchJson).then(response => {
         console.log(response.data)
         this.mhsws = response.data.data
-        this.pages_mhsw = this.mhsws
+        this.pages_mhsw = this.mhsws.slice(0,this.pagination.rowsPerPage)
         this.close()
         this.isPagination = false
         this.isFilterPagination = true

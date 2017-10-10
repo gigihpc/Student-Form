@@ -297,7 +297,7 @@ var jwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	SigningMethod: jwt.SigningMethodHS256,
 })
 
-//Seraching
+//Searching
 func (c *appContext) searchedHandler(w http.ResponseWriter, r *http.Request) {
 	body := context.Get(r, "body").(*SearchResource)
 	mhsw, err := c.Searched(body.Data.Field, body.Data.Value)
