@@ -10,6 +10,3 @@ export const getStatusLogin = state => {
 export const loading = state => {
     return state.loading
 }
-export const pages = state => {
-    return state.paging
-}

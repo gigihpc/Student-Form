@@ -113,7 +113,6 @@
 
 <script>
 import { HTTP } from '@/router/index'
-//import {mapGetters} from 'vuex'
 // import textinput from './text_input'
 // import axios from 'axios'
 export default {
@@ -139,7 +138,6 @@ export default {
       pagination: {rowsPerPage:5},
       isPagination: false,
       page:1,
-      pageFilter:1,
       pages_mhsw: [],
       isFilterPagination: false
     }
@@ -148,10 +146,7 @@ export default {
   {
      pages() {
        return this.pagination.rowsPerPage ? Math.ceil(this.mhsws.length / this.pagination.rowsPerPage) : 0
-     },
-    //  pagesFilter() {
-    //    this.pagination.rowsPerPage ? Math.ceil(this.pages_mhsw.length / this.pagination.rowsPerPage) : 0
-    //  }
+     }
   },
   watch: {
     page() {
@@ -166,7 +161,6 @@ export default {
     fetchmhsws: function() {
       HTTP.get('/api/mhsws').then(response => {
         this.mhsws = response.data.data
-        // this.$store.dispatch('PaginationCalculate',this.pagination.rowsPerPage,this.mhsws)
         this.pages_mhsw = this.mhsws.slice(0, this.pagination.rowsPerPage)
         this.isPagination = true
         this.isFilterPagination = false
@@ -276,7 +270,6 @@ export default {
         this.close()
         this.isPagination = false
         this.isFilterPagination = true
-        // this.$store.dispatch('PaginationCalculate',this.pagination.rowsPerPage, this.pages_mhsw)
       }).catch(err => {
         console.log(err)
       })
