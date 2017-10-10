@@ -15,6 +15,7 @@ let router = new Router({
       name: 'MHSW',
       component: Mhsw,
       meta: {requiresAuth: true},
+      // meta: {disabledAction: true}
     },
     {
       path: '/regist',
@@ -57,7 +58,7 @@ router.beforeEach((to, from, next) => {
 export default router
 
 export const HTTP = axios.create({
-  baseURL: 'http://192.168.1.8:8001',
+  baseURL: 'http://192.168.1.8:8002',
   timeout: 1000,
   withCredentials: true,
   headers: {'Content-Type': 'application/json, text/plain, */*',

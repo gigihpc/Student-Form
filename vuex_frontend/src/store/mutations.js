@@ -13,3 +13,7 @@ export const statusLogin = (store, status) => {
 export const loading = (store, loading) => {
     store.loading = loading
 }
+
+export const Pagination = (store, paging) => {
+    store.paging = paging
+}

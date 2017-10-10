@@ -41,3 +41,8 @@ export const Authenticate1 = ({commit}, payload) => {
        console.log('error: ', err.response)
     }) 
 }
+
+export const PaginationCalculate = ({commit}, rowPerPage, arrMhsws) => {
+    let paging = Math.ceil(arrMhsws.length/rowPerPage)
+    commit('Pagination',paging)
+}

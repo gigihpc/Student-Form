@@ -57,18 +57,13 @@ export default{
 
   methods: {
     Login: function () {
-      // this.loading = true
-      // this.$store.commit('setUser', {user: this.email})
-      // this.$store.commit('setPassword', {password: this.password})
       this.$store.dispatch('Authenticate',{data:{
         user: this.email,
         password: this.password
       }}).then(() => {
-          // console.log('auth: ',this.$store.state.auth)
-          localStorage.setItem('auth',this.$store.state.auth)
-          localStorage.setItem('token',this.$store.state.token)
+        localStorage.setItem('auth',this.$store.state.auth)
+        localStorage.setItem('token',this.$store.state.token)
         this.$router.push('mhsw')
-        // this.loading = false
         this.$store.commit('loading', false)
         this.$store.commit('statusLogin','')
       })
