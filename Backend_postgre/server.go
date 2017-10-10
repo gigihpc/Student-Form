@@ -28,6 +28,13 @@ type Login struct {
 type LoginResource struct {
 	Data Login `json:"data"`
 }
+type Search struct {
+	Field string `json: "field"`
+	Value string `json: "value"`
+}
+type SearchResource struct {
+	Data Search `json: "data"`
+}
 
 var mySigningKey = []byte("Scret")
 
@@ -103,6 +110,34 @@ func (c *appContext) Matched(user string, password string) (UserResource, error)
 	query := `select id from users where email=$1 and password=$2`
 	err := c.db.QueryRow(query, user, password).Scan(&id)
 
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
+
+func (c *appContext) Searched(field string, val string) (MahasiswaCollection, error) {
+	res := MahasiswaCollection{[]Mahasiswa{}}
+	query := `select id, name, address, old from search_mhsw($1,$2)`
+	rows, err := c.db.Query(query, field, val)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	var _id, _name, _address, _old string
+	for rows.Next() {
+		err = rows.Scan(&_id, &_name, &_address, &_old)
+		if err != nil {
+			panic(err)
+		}
+		mhsw := Mahasiswa{Id: _id, Name: _name, Address: _address, Old: _old}
+		res.Data = append(res.Data, mhsw)
+	}
+	// get any error encountered during iteration
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
 	if err != nil {
 		return res, err
 	}
@@ -261,6 +296,16 @@ var jwtMiddleware = jwtmiddleware.New(jwtmiddleware.Options{
 	},
 	SigningMethod: jwt.SigningMethodHS256,
 })
+
+//Seraching
+func (c *appContext) searchedHandler(w http.ResponseWriter, r *http.Request) {
+	body := context.Get(r, "body").(*SearchResource)
+	mhsw, err := c.Searched(body.Data.Field, body.Data.Value)
+	if err != nil {
+		panic(err)
+	}
+	json.NewEncoder(w).Encode(mhsw)
+}
 
 //Mahasiswa
 func (c *appContext) mhswHandler(w http.ResponseWriter, r *http.Request) {
@@ -507,6 +552,7 @@ func main() {
 	router.Post("/api/user", commonHandler.Append(contentTypeHandler, bodyHandler(UserResource{})).ThenFunc(appC.createUserHandler))
 	// router.Get("/api/user", commonHandler.ThenFunc(appC.UserHandler))
 	router.Post("/api/user_auth", commonHandler.Append(contentTypeHandler, bodyHandler(LoginResource{})).ThenFunc(appC.MatchedHandler))
+	router.Post("/api/search_mhsw", jwtMiddleware.Handler(commonHandler.Append(contentTypeHandler, bodyHandler(SearchResource{})).ThenFunc(appC.searchedHandler)))
 	port := "8002"
 	println("open port: " + port)
 	http.ListenAndServe(":"+port, router)
