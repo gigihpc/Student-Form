@@ -1,6 +1,6 @@
 <template>
   <v-app light>
-    <v-navigation-drawer v-if="!$route.meta.disabledAction" persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer" enable-resize-watcher>
+    <v-navigation-drawer v-if="!$route.meta.disabledAction" persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer" enable-resize-watcher app>
       <v-list>
         <v-list-tile value="true" v-for="(item, i) in items" :key="i">
           <v-list-tile-action>
@@ -12,7 +12,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar fixed>
+    <v-toolbar fixed app>
       <v-toolbar-side-icon v-if="!$route.meta.disabledAction" @click.stop="drawer = !drawer" light></v-toolbar-side-icon>
       <!-- <v-btn icon light @click.stop="miniVariant = !miniVariant">
         <v-icon v-html="miniVariant ? 'chevron_right' : 'chevron_left'"></v-icon>
@@ -24,7 +24,7 @@
         <v-icon></v-icon>
       </v-btn> -->
       <v-layout justify-center>
-        <v-toolbar-title v-text="title"></v-toolbar-title>
+        <v-toolbar-title v-text="title" app></v-toolbar-title>
       </v-layout>
       <v-spacer></v-spacer>
       <v-btn v-if="!$route.meta.disabledAction" icon light @click.stop="rightDrawer = !rightDrawer">
@@ -38,7 +38,7 @@
         </v-slide-y-transition>
       </v-container>
     </main>
-    <v-navigation-drawer temporary :right="right" v-model="rightDrawer">
+    <v-navigation-drawer temporary :right="right" v-model="rightDrawer" app>
       <v-list>
         <!-- <v-list-tile @click="right = !right">
             <v-list-tile-action>
@@ -56,7 +56,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-footer :fixed="fixed">
+    <v-footer :fixed="fixed" app>
       <span>&copy; 2017</span>
     </v-footer>
   </v-app>

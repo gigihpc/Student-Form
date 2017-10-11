@@ -10,8 +10,7 @@ const state = {
     auth: localStorage.getItem('auth'),
     token: localStorage.getItem('token'),
     status: '',
-    loading: false,
-    paging:[]
+    loading: false
   }
   const store = new Vuex.Store({
     state,

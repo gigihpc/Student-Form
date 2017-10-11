@@ -231,11 +231,11 @@ func (c *appContext) createUserHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		println("erreor is: ", err.Error)
 		// panic(err)
+	} else {
+		query := `select id, name, email, password, country from users where id=$1`
+		row := c.db.QueryRow(query, id)
+		err = row.Scan(&body.Data.ID, &body.Data.Name, &body.Data.Email, &body.Data.Password, &body.Data.Country)
 	}
-	query := `select id, name, email, password, country from users where id=$1`
-	row := c.db.QueryRow(query, id)
-
-	err = row.Scan(&body.Data.ID, &body.Data.Name, &body.Data.Email, &body.Data.Password, &body.Data.Country)
 	if err != nil {
 		w.WriteHeader(203)
 		json.NewEncoder(w).Encode(body)
